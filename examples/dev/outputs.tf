@@ -1,6 +1,6 @@
 output "zREADME" {
   value = <<README
-Your "${var.name}" network infrastructure has been successfully provisioned!
+Your "${var.name_prefix}" network infrastructure has been successfully provisioned!
 README
 }
 

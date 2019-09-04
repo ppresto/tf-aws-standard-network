@@ -1,4 +1,4 @@
-name              = "ppresto-dev-network"
+name_prefix       = "ppresto-dev-network"
 vpc_cidrs_public  = ["10.139.1.0/24",]
 vpc_cidrs_private = ["10.139.11.0/24",]
 nat_count         = "1"
