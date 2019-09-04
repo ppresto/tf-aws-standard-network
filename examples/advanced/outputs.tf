@@ -12,7 +12,7 @@ The public part of the key loaded into the agent ("public_key_openssh" output) h
 
 Use the below command(s) to SSH into a Bastion host using this private key.
 
-  ${join("\n  ", formatlist("ssh -A -i %s %s@%s", module.ssh_keypair_aws_override.private_key_filename, module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
+  ${join("\n  ", formatlist("ssh -A -i %s %s@%s", module.ssh_keypair_aws_override.private_key_filename, module.aws_std_network.bastion_username, module.aws_std_network.bastion_ips_public))}
 
 To force the generation of a new key, the private key instance can be "tainted" using the below command.
 
@@ -21,31 +21,31 @@ README
 }
 
 output "vpc_cidr" {
-  value = "${module.network_aws.vpc_cidr}"
+  value = "${module.aws_std_network.vpc_cidr}"
 }
 
 output "vpc_id" {
-  value = "${module.network_aws.vpc_id}"
+  value = "${module.aws_std_network.vpc_id}"
 }
 
 output "subnet_public_ids" {
-  value = "${module.network_aws.subnet_public_ids}"
+  value = "${module.aws_std_network.subnet_public_ids}"
 }
 
 output "subnet_private_ids" {
-  value = "${module.network_aws.subnet_private_ids}"
+  value = "${module.aws_std_network.subnet_private_ids}"
 }
 
 output "bastion_security_group" {
-  value = "${module.network_aws.bastion_security_group}"
+  value = "${module.aws_std_network.bastion_security_group}"
 }
 
 output "bastion_ips_public" {
-  value = "${module.network_aws.bastion_ips_public}"
+  value = "${module.aws_std_network.bastion_ips_public}"
 }
 
 output "bastion_username" {
-  value = "${module.network_aws.bastion_username}"
+  value = "${module.aws_std_network.bastion_username}"
 }
 
 output "private_key_name" {
@@ -69,5 +69,5 @@ output "public_key_openssh" {
 }
 
 output "ssh_key_name" {
-  value = "${module.network_aws.ssh_key_name}"
+  value = "${module.aws_std_network.ssh_key_name}"
 }

@@ -1,6 +1,8 @@
-module "network_aws" {
-  # source = "github.com/hashicorp-modules/network-aws"
-  source = "../../../network-aws"
+//--------------------------------------------------------------------
+// Modules
+module "aws_std_network" {
+  source  = "app.terraform.io/Patrick/aws_std_network/aws"
+  version = "0.2.0"
 
   name              = "${var.name}"
   vpc_cidrs_public  = "${var.vpc_cidrs_public}"
