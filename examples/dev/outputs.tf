@@ -12,6 +12,14 @@ output "vpc_id" {
   value = "${module.aws_std_network.vpc_id}"
 }
 
+output "vpc_cidrs_public" {
+  value = "${module.aws_std_network.vpc_cidrs_public}"
+}
+
+output "vpc_cidrs_private" {
+  value = "${module.aws_std_network.vpc_cidrs_private}"
+}
+
 output "subnet_public_ids" {
   value = "${module.aws_std_network.subnet_public_ids}"
 }

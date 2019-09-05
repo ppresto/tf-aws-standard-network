@@ -41,6 +41,14 @@ output "vpc_id" {
   value = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
 }
 
+output "vpc_cidrs_public" {
+  value = "${var.vpc_cidrs_public}"
+}
+
+output "vpc_cidrs_private" {
+  value = "${var.vpc_cidrs_private}"
+}
+
 output "subnet_public_ids" {
   value = ["${aws_subnet.public.*.id}"]
 }
