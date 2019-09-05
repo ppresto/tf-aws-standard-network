@@ -3,7 +3,7 @@ variable "create" {
   default     = true
 }
 
-variable "name" {
+variable "name_prefix" {
   description = "Name for resources, defaults to \"network-aws\"."
   default     = "network-aws"
 }

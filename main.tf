@@ -10,7 +10,7 @@ resource "aws_vpc" "main" {
   cidr_block           = "${var.vpc_cidr}"
   enable_dns_hostnames = true
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s", var.name_prefix)))}"
 }
 
 resource "aws_subnet" "public" {
@@ -22,14 +22,14 @@ resource "aws_subnet" "public" {
   cidr_block              = "${element(var.vpc_cidrs_public, count.index)}"
   map_public_ip_on_launch = true
 
-  tags = "${merge(var.tags, map("Name", format("%s-public-%d", var.name, count.index + 1)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-public-%d", var.name_prefix, count.index + 1)))}"
 }
 
 resource "aws_internet_gateway" "main" {
   count  = "${var.create ? 1 : 0}"
   vpc_id = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
 
-  tags = "${merge(var.tags, map("Name", format("%s", var.name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s", var.name_prefix)))}"
 }
 
 resource "aws_route_table" "public" {
@@ -41,7 +41,7 @@ resource "aws_route_table" "public" {
     gateway_id = "${aws_internet_gateway.main.id}"
   }
 
-  tags = "${merge(var.tags, map("Name", format("%s-public", var.name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-public", var.name_prefix)))}"
 }
 
 resource "aws_route_table_association" "public" {
@@ -55,7 +55,7 @@ resource "aws_eip" "nat" {
   count = "${var.create && var.nat_count != "-1" ? var.nat_count : var.create ? length(var.vpc_cidrs_public) : 0}"
   vpc   = true
 
-  tags = "${merge(var.tags, map("Name", format("%s-%d", var.name, count.index + 1)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-%d", var.name_prefix, count.index + 1)))}"
 }
 
 resource "aws_nat_gateway" "nat" {
@@ -64,7 +64,7 @@ resource "aws_nat_gateway" "nat" {
   allocation_id = "${element(aws_eip.nat.*.id, count.index)}"
   subnet_id     = "${element(aws_subnet.public.*.id, count.index)}"
 
-  tags = "${merge(var.tags, map("Name", format("%s-%d", var.name, count.index + 1)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-%d", var.name_prefix, count.index + 1)))}"
 }
 
 resource "aws_subnet" "private" {
@@ -75,7 +75,7 @@ resource "aws_subnet" "private" {
   cidr_block              = "${element(var.vpc_cidrs_private, count.index)}"
   map_public_ip_on_launch = false
 
-  tags = "${merge(var.tags, map("Name", format("%s-private-%d", var.name, count.index + 1)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-private-%d", var.name_prefix, count.index + 1)))}"
 }
 
 resource "aws_route_table" "private_subnet" {
@@ -88,7 +88,7 @@ resource "aws_route_table" "private_subnet" {
     nat_gateway_id = "${element(aws_nat_gateway.nat.*.id, count.index)}"
   }
 
-  tags = "${merge(var.tags, map("Name", format("%s-private-%d", var.name, count.index + 1)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-private-%d", var.name_prefix, count.index + 1)))}"
 }
 
 resource "aws_route_table_association" "private" {
@@ -102,7 +102,7 @@ module "consul_auto_join_instance_role" {
   source = "github.com/hashicorp-modules/consul-auto-join-instance-role-aws"
 
   create = "${var.create && var.bastion_count > 0 ? 1 : 0}"
-  name   = "${var.name}"
+  name   = "${var.name_prefix}"
 }
 
 data "aws_ami" "hashistack" {
@@ -142,7 +142,7 @@ module "ssh_keypair_aws" {
   # https://github.com/hashicorp/terraform/issues/13980
   # create = "${var.create && var.ssh_key_name != "" && var.bastion_count > 0 ? 1 : 0}" # TODO: Uncomment once issue #4149 is resolved
   create = "${var.create && !var.ssh_key_override && var.bastion_count > 0 ? 1 : 0}" # TODO: Remove once issue #4149 is resolved
-  name   = "${var.name}"
+  name   = "${var.name_prefix}"
 }
 
 data "template_file" "bastion_init" {
@@ -150,7 +150,7 @@ data "template_file" "bastion_init" {
   template = "${file("${path.module}/templates/init-systemd.sh.tpl")}"
 
   vars = {
-    hostname  = "${var.name}-bastion-${count.index + 1}"
+    hostname  = "${var.name_prefix}-bastion-${count.index + 1}"
     user_data = "${var.user_data != "" ? var.user_data : "echo No custom user_data"}"
   }
 }
@@ -159,18 +159,18 @@ module "bastion_consul_client_sg" {
   source = "github.com/hashicorp-modules/consul-client-ports-aws"
 
   create      = "${var.create && var.bastion_count > 0 ? 1 : 0}"
-  name        = "${var.name}-bastion-consul-client"
+  name        = "${var.name_prefix}-bastion-consul-client"
   vpc_id      = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
   cidr_blocks = ["${var.vpc_cidr}"]
 }
 
 resource "aws_security_group" "bastion" {
   count       = "${var.create && var.bastion_count > 0 ? 1 : 0}"
-  name_prefix = "${var.name}-bastion-"
-  description = "Security Group for ${var.name} Bastion hosts"
+  name_prefix = "${var.name_prefix}-bastion-"
+  description = "Security Group for ${var.name_prefix} Bastion hosts"
   vpc_id      = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
 
-  tags = "${merge(var.tags, map("Name", format("%s-bastion", var.name)))}"
+  tags = "${merge(var.tags, map("Name", format("%s-bastion", var.name_prefix)))}"
 }
 
 resource "aws_security_group_rule" "ssh" {
@@ -210,5 +210,5 @@ resource "aws_instance" "bastion" {
     "${element(concat(aws_security_group.bastion.*.id, list("")), 0)}", # TODO: Workaround for issue #11210
   ]
 
-  tags = "${merge(var.tags, map("Name", format("%s-bastion-%d", var.name, count.index + 1), "Consul-Auto-Join", var.name))}"
+  tags = "${merge(var.tags, map("Name", format("%s-bastion-%d", var.name_prefix, count.index + 1), "Consul-Auto-Join", var.name_prefix))}"
 }

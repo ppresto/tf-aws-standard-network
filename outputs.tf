@@ -1,7 +1,7 @@
 output "zREADME" {
   value = <<README
 # ------------------------------------------------------------------------------
-# ${var.name} Network
+# ${var.name_prefix} Network
 # ------------------------------------------------------------------------------
 
 A private RSA key has been generated and downloaded locally. The file
