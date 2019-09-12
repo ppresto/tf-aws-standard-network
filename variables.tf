@@ -34,6 +34,12 @@ variable "nat_count" {
   default     = -1
 }
 
+variable "cidr_ingress" {
+  description = "VPC CIDR blocks incoming traffic"
+  type        = "list"
+  default     = ["0.0.0.0/0"]
+}
+
 variable "vpc_cidrs_private" {
   description = "VPC CIDR blocks for private subnets, defaults to \"10.139.11.0/24\", \"10.139.12.0/24\", and \"10.139.13.0/24\"."
   type        = "list"

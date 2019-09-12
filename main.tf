@@ -212,3 +212,35 @@ resource "aws_instance" "bastion" {
 
   tags = "${merge(var.tags, map("Name", format("%s-bastion-%d", var.name_prefix, count.index + 1), "Consul-Auto-Join", var.name_prefix))}"
 }
+
+resource "aws_security_group" "webapp" {
+  count       = "${var.create && var.bastion_count > 0 ? 1 : 0}"
+  name_prefix = "${var.name_prefix}-webapp-"
+  description = "Security Group for ${var.name_prefix} Web App"
+  vpc_id      = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
+
+  tags = "${merge(var.tags, map("Name", format("%s-webapp", var.name_prefix)))}"
+}
+
+resource "aws_security_group_rule" "egress_web" {
+  count = "${var.create && var.bastion_count > 0 ? 1 : 0}"
+
+  security_group_id = "${aws_security_group.webapp.id}"
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = "${var.cidr_ingress}"
+}
+
+resource "aws_security_group_rule" "ssh-web" {
+  count = "${var.create && var.bastion_count > 0 ? 1 : 0}"
+
+  security_group_id = "${aws_security_group.webapp.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_blocks       = "${var.cidr_ingress}"
+}
+
