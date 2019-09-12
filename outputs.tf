@@ -61,6 +61,10 @@ output "bastion_security_group" {
   value = "${element(concat(aws_security_group.bastion.*.id, list("")), 0)}"
 }
 
+output "webapp_security_group" {
+  value = "${element(concat(aws_security_group.webapp.*.id, list("")), 0)}"
+}
+
 output "bastion_ips_public" {
   value = ["${aws_instance.bastion.*.public_ip}"]
 }
