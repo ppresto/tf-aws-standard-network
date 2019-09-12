@@ -233,18 +233,18 @@ resource "aws_security_group_rule" "egress_web" {
   cidr_blocks       = "${var.cidr_ingress}"
 }
 
-resource "aws_security_group_rule" "ssh-web" {
+resource "aws_security_group_rule" "web-443" {
   count = "${var.create && var.bastion_count > 0 ? 1 : 0}"
 
   security_group_id = "${aws_security_group.webapp.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = 22
-  to_port           = 22
+  from_port         = 443
+  to_port           = 443
   cidr_blocks       = "${var.cidr_ingress}"
 }
 
-resource "aws_security_group_rule" "http-web" {
+resource "aws_security_group_rule" "web-8000" {
   count = "${var.create && var.bastion_count > 0 ? 1 : 0}"
 
   security_group_id = "${aws_security_group.webapp.id}"
