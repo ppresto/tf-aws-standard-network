@@ -244,3 +244,13 @@ resource "aws_security_group_rule" "ssh-web" {
   cidr_blocks       = "${var.cidr_ingress}"
 }
 
+resource "aws_security_group_rule" "http-web" {
+  count = "${var.create && var.bastion_count > 0 ? 1 : 0}"
+
+  security_group_id = "${aws_security_group.webapp.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8000
+  to_port           = 8000
+  cidr_blocks       = "${var.cidr_ingress}"
+}
