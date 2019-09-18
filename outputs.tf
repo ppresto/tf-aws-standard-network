@@ -33,35 +33,35 @@ using the below command if the private key was not overridden.
 README
 }
 
-output "vpc_cidr" {
-  value = "${var.create_vpc ? element(concat(aws_vpc.main.*.cidr_block, list("")), 0) : var.vpc_cidr}" # TODO: Workaround for issue #11210
-}
+#output "vpc_cidr" {
+#  value = "${var.create_vpc ? element(concat(aws_vpc.main.*.cidr_block, list("")), 0) : var.vpc_cidr}" # TODO: Workaround for issue #11210
+#}
 
 output "vpc_id" {
   value = "${var.create_vpc ? element(concat(aws_vpc.main.*.id, list("")), 0) : var.vpc_id}" # TODO: Workaround for issue #11210
 }
 
-output "vpc_cidrs_public" {
-  value = "${var.vpc_cidrs_public}"
-}
+#output "vpc_cidrs_public" {
+#  value = "${var.vpc_cidrs_public}"
+#}
 
-output "vpc_cidrs_private" {
-  value = "${var.vpc_cidrs_private}"
-}
+#output "vpc_cidrs_private" {
+#  value = "${var.vpc_cidrs_private}"
+#}
 
-output "subnet_public_ids" {
-  value = ["${aws_subnet.public.*.id}"]
-}
+#output "subnet_public_ids" {
+#  value = ["${aws_subnet.public.*.id}"]
+#}
 
-output "subnet_private_ids" {
-  value = ["${aws_subnet.private.*.id}"]
-}
+#output "subnet_private_ids" {
+#  value = ["${aws_subnet.private.*.id}"]
+#}
 
-output "bastion_security_group" {
+output "security_group_bastion" {
   value = "${element(concat(aws_security_group.bastion.*.id, list("")), 0)}"
 }
 
-output "webapp_security_group" {
+output "security_group_web" {
   value = "${element(concat(aws_security_group.webapp.*.id, list("")), 0)}"
 }
 
@@ -69,29 +69,29 @@ output "bastion_ips_public" {
   value = ["${aws_instance.bastion.*.public_ip}"]
 }
 
-output "bastion_username" {
-  value = "${lookup(var.users, var.os)}"
-}
+#output "bastion_username" {
+#  value = "${lookup(var.users, var.os)}"
+#}
 
-output "private_key_name" {
-  value = "${module.ssh_keypair_aws.private_key_name}"
-}
+#output "private_key_name" {
+#  value = "${module.ssh_keypair_aws.private_key_name}"
+#}
 
-output "private_key_filename" {
-  value = "${module.ssh_keypair_aws.private_key_filename}"
-}
+#output "private_key_filename" {
+#  value = "${module.ssh_keypair_aws.private_key_filename}"
+#}
 
-output "private_key_pem" {
+output "ssh_key_private_pem" {
   value = "${module.ssh_keypair_aws.private_key_pem}"
 }
 
-output "public_key_pem" {
-  value = "${module.ssh_keypair_aws.public_key_pem}"
-}
+#output "public_key_pem" {
+#  value = "${module.ssh_keypair_aws.public_key_pem}"
+#}
 
-output "public_key_openssh" {
-  value = "${module.ssh_keypair_aws.public_key_openssh}"
-}
+#output "public_key_openssh" {
+#  value = "${module.ssh_keypair_aws.public_key_openssh}"
+#}
 
 output "ssh_key_name" {
   value = "${module.ssh_keypair_aws.name}"
