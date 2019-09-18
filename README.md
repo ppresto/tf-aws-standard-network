@@ -47,18 +47,13 @@ This module requires a pre-existing AWS SSH key pair for each bastion host.
 ## Outputs
 
 - `zREADME`: The module README.
-- `vpc_cidr`: The VPC CIDR block.
+
 - `vpc_id`: The VPC ID.
 - `subnet_public_ids`: The public subnet IDs.
 - `subnet_private_ids`: The private subnet IDs.
 - `bastion_security_group`: The ID of the bastion host security group.
 - `bastion_ips_public`: The public IP(s) of the Bastion host(s).
-- `bastion_username`: The Bastion host username.
-- `private_key_name`: The private key name.
-- `private_key_filename`: The private key filename.
 - `private_key_pem`: The private key data in PEM format.
-- `public_key_pem`: The public key data in PEM format.
-- `public_key_openssh`: The public key data in OpenSSH authorized_keys format, if the selected private key format is compatible. All RSA keys are supported, and ECDSA keys with curves "P256", "P384" and "P251" are supported. This attribute is empty if an incompatible ECDSA curve is selected.
 - `ssh_key_name`: Name of AWS keypair.
 
 ## Submodules
