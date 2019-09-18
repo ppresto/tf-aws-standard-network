@@ -49,13 +49,13 @@ output "vpc_id" {
 #  value = "${var.vpc_cidrs_private}"
 #}
 
-#output "subnet_public_ids" {
-#  value = ["${aws_subnet.public.*.id}"]
-#}
+output "subnet_public_ids" {
+  value = ["${aws_subnet.public.*.id}"]
+}
 
-#output "subnet_private_ids" {
-#  value = ["${aws_subnet.private.*.id}"]
-#}
+output "subnet_private_ids" {
+  value = ["${aws_subnet.private.*.id}"]
+}
 
 output "security_group_bastion" {
   value = "${element(concat(aws_security_group.bastion.*.id, list("")), 0)}"
