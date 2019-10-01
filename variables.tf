@@ -83,7 +83,7 @@ variable "os_version" {
 
 variable "bastion_count" {
   description = "Number of bastion hosts to provision across public subnets, defaults to public subnet count."
-  default     = -1
+  default     = 1
 }
 
 variable "image_id" {
