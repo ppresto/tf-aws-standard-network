@@ -261,7 +261,7 @@ resource "aws_security_group_rule" "osweb-8443" {
   security_group_id = "${aws_security_group.webapp.id}"
   type              = "ingress"
   protocol          = "tcp"
-  from_port         = 8000
-  to_port           = 8000
+  from_port         = 8443
+  to_port           = 8443
   cidr_blocks       = "${var.cidr_ingress}"
 }
