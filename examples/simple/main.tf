@@ -19,7 +19,7 @@ data "aws_ami" "base" {
 }
 
 module "network_aws" {
-  source = "../../../network-aws"
+  source = "../../../tf-aws-standard-network"
   # source = "github.com/hashicorp-modules/network-aws"
 
   name     = "${var.name}"
