@@ -133,11 +133,5 @@ variable "users" {
 variable "tags" {
   description = "Optional map of tags to set on resources, defaults to empty map."
   type        = "map"
-  default     = {
-    owner = "ppresto@hashicorp.com"
-    se-region = "AMER-West-E2-R1"
-    terraform = "true"
-    purpose = "Shared VPC used for multiple workspaces"
-    ttl = "-1"
-  }
+  default     = {}
 }

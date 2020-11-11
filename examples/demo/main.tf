@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "${var.region}"
+}
+
 data "aws_ami" "base" {
   most_recent = true
   owners      = ["${var.ami_owner}"]
@@ -19,10 +23,9 @@ data "aws_ami" "base" {
 }
 
 module "aws_std_network" {
-  source = "../../../tf-aws-standard-network"
-  # source = "github.com/hashicorp-modules/network-aws"
-
-  name_prefix     = "${var.name}"
-  image_id = "${data.aws_ami.base.id}"
-  tags     = "${var.tags}"
+  #source = "./modules/aws_std_network"
+  source = "github.com/hashicorp-modules/network-aws"
+  name     = "${var.name}"
+  image_id        = "${data.aws_ami.base.id}"
+  tags            = "${var.tags}"
 }
